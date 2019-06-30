@@ -5,3 +5,13 @@
     scroll-behavior: smooth;
     background-color: lightblue;
 }
+
+body
+{
+    height: 100vh;
+}
+
+canvas
+{
+    background-color: rgb(167, 241, 167);
+}
