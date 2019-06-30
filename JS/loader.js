@@ -5,57 +5,73 @@ var win = window,
     width = win.innerWidth || htm.clientWidth || body.clientWidth,
     height = win.innerHeight || htm.clientHeight || body.clientHeight;
 
-var canvas = document.createElement("canvas");
-canvas.id = "canvas";
-canvas.width = width/1.01;
-canvas.height = height/1.05;
+var canvas = document.getElementsByTagName("canvas")[0];
+canvas.width = 400;
+canvas.height = 400;
 
-var canvasPiece = document.getElementsByClassName("big")[0];
-canvasPiece.appendChild(canvas);
 var ctx = canvas.getContext("2d");
 
-drawShape();
+box();
 
-function drawShape()
+function box()
 {
     ctx.lineWidth = 10;
-    ctx.strokeRect(0 , 0 , width/1.01 , height/1.05);
-
-    ctx.beginPath();
-    ctx.moveTo(width/5 , height/5);
-    ctx.lineTo(width/5  , height/1.3);
-    ctx.lineTo(width/1.3 , height/1.3);
-    ctx.closePath();
-
-    ctx.lineWidth = 6;
     ctx.strokeStyle = "slateblue";
-    ctx.stroke();
+    ctx.strokeRect(0 , 0 , canvas.width , canvas.height);
 }
 
-window.addEventListener("click" , renderBalls);
+var xPos , yPos ,
+    xVel = 10 , yVel = -10,
+    run;
 
-function renderBalls()
+function ball(x , y)
 {
-    var xPos = event.clientX,
-        yPos = event.clientY;
-    drawBall(xPos , yPos);
-}
-
-function drawBall(x , y)
-{
-    ctx.beginPath();
-    ctx.moveTo(x , y);
-    ctx.arc(x , y , 13 , 0 , 2*Math.PI);
-
     ctx.fillStyle = "tomato";
+    ctx.beginPath();
+    ctx.arc(x , y , 14 , 0 , 2*Math.PI);
     ctx.fill();
+    ctx.closePath();
 }
 
-const gravityBtn = document.querySelector(".button");
-
-gravityBtn.addEventListener("click" , physics);
-
-function physics()
+function draw()
 {
+    ctx.clearRect(0 , 0 , canvas.width , canvas.height);
+    box();
+
+    console.log(xPos , yPos);
+    ball(xPos , yPos);
+
+    xPos += xVel;
+    yPos += yVel;
     
+    if(xPos >= canvas.width || xPos <= 0)
+    	xVel *= -1;
+    if(yPos >= canvas.height || yPos <= 0)
+    	yVel *= -1;
+}
+
+function getRandomInt(min, max)
+{
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+const grav = document.querySelectorAll(".button")[0];
+const stop = document.querySelectorAll(".button")[1];
+grav.addEventListener("click" , start);
+stop.addEventListener("click" , pause);
+
+function start()
+{
+    xPos = getRandomInt(0 , canvas.width);
+    yPos = getRandomInt(0 , canvas.height);
+
+    clearInterval(run);
+    run = setInterval(draw , 10);
+}
+
+function pause()
+{
+    clearInterval(run);
 }
