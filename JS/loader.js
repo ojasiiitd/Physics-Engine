@@ -5,65 +5,57 @@ var win = window,
     width = win.innerWidth || htm.clientWidth || body.clientWidth,
     height = win.innerHeight || htm.clientHeight || body.clientHeight;
 
-var physicalObjects = [];
-
 var canvas = document.createElement("canvas");
 canvas.id = "canvas";
-canvas.width = width;
-canvas.height = height;
+canvas.width = width/1.01;
+canvas.height = height/1.05;
 
-document.body.appendChild(canvas);
-
+var canvasPiece = document.getElementsByClassName("big")[0];
+canvasPiece.appendChild(canvas);
 var ctx = canvas.getContext("2d");
 
-var PhysicalObject = function(x , y , w , h)
+drawShape();
+
+function drawShape()
 {
-    this.x = x;
-    this.y = y;
+    ctx.lineWidth = 10;
+    ctx.strokeRect(0 , 0 , width/1.01 , height/1.05);
 
-    this.width = w;
-    this.height = h;
+    ctx.beginPath();
+    ctx.moveTo(width/5 , height/5);
+    ctx.lineTo(width/5  , height/1.3);
+    ctx.lineTo(width/1.3 , height/1.3);
+    ctx.closePath();
 
-    this.xVel = 0;
-    this.yVel = 0;
-
-    this.addXVel = function(vel)
-    {
-        this.xVel += vel;
-    }
-    this.addYVel = function(vel)
-    {
-        this.yVel += vel;
-    }
-
-    this.nextFrame = function()
-    {
-        this.x += this.xVel;
-        this.y += this.yVel;
-    }
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = "slateblue";
+    ctx.stroke();
 }
 
-function frameReader()
-{
-    ctx.clearRect(0 , 0 , width , height);
+window.addEventListener("click" , renderBalls);
 
-    for(var i=0 ; i<physicalObjects.length ; i++)
-    {
-        ctx.fillRect(
-            physicalObjects[i].x,
-            physicalObjects[i].y,
-            physicalObjects.width,
-            physicalObjects[i].height);
-        
-        physicalObjects[i].nextFrame();
-    }
+function renderBalls()
+{
+    var xPos = event.clientX,
+        yPos = event.clientY;
+    drawBall(xPos , yPos);
 }
 
-function frameRenderLoop()
+function drawBall(x , y)
 {
-    requestAnimationFrame(frameRenderLoop);
-    frameReader();
+    ctx.beginPath();
+    ctx.moveTo(x , y);
+    ctx.arc(x , y , 13 , 0 , 2*Math.PI);
+
+    ctx.fillStyle = "tomato";
+    ctx.fill();
 }
 
-frameRenderLoop();
-physicalObjects.push(new PhysicalObject(100, 100, 20, 20));
+const gravityBtn = document.querySelector(".button");
+
+gravityBtn.addEventListener("click" , physics);
+
+function physics()
+{
+    
+}
