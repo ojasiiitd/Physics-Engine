@@ -21,7 +21,7 @@ function box()
 }
 
 var xPos , yPos ,
-    xVel = 10 , yVel = -10,
+    xVel , yVel,
     run;
 
 function ball(x , y)
@@ -38,22 +38,34 @@ function draw()
     ctx.clearRect(0 , 0 , canvas.width , canvas.height);
     box();
 
-    console.log(xPos , yPos);
     ball(xPos , yPos);
 
     xPos += xVel;
     yPos += yVel;
-    
+
+    if(xVel == 0 || yVel == 0)
+        stop.click();
+
     if(xPos >= canvas.width || xPos <= 0)
-    	xVel *= -1;
+    {
+        xVel *= -1;
+        if(yVel > 0)
+            yVel -= .4;
+        else
+            yVel += .4;
+    }
     if(yPos >= canvas.height || yPos <= 0)
-    	yVel *= -1;
+    {
+        yVel *= -1;
+        if(xVel > 0)
+            xVel -= .4;
+        else
+            xVel += .4;
+    }
 }
 
 function getRandomInt(min, max)
 {
-    min = Math.ceil(min);
-    max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
@@ -66,6 +78,8 @@ function start()
 {
     xPos = getRandomInt(0 , canvas.width);
     yPos = getRandomInt(0 , canvas.height);
+    xVel = 5.2;
+    yVel = 5.2;
 
     clearInterval(run);
     run = setInterval(draw , 10);
