@@ -28,7 +28,7 @@ var colors = [
 var ballColor = [] , xPos = [] , yPos = [] ,
     xVel = [] , yVel = [] , u = [] ,
     runtime = [] , g = 9.81 , restitution = 0.99 ,
-    run , runInterval = 1 , radius = 10 , initialX;
+    run , runInterval = 100 , radius = 10 , initialX;
 
 function pointerBall()
 {
@@ -129,6 +129,27 @@ function draw()
     }
 
     drawInit();
+    checkCollision();
+}
+
+function checkCollision()
+{
+    for(var i=0 ; i<xPos.length ; i++)
+    {
+        for(var j=0 ; j<xPos.length ; j++)
+        {
+            if(i == j)
+                continue;
+            
+            var dist = Math.sqrt(((xPos[j]-xPos[i])*(xPos[j]-xPos[i])) + ((yPos[j]-yPos[i])*(yPos[j]-yPos[i])));
+            console.log(dist);
+            if(dist <= 2*radius)
+            {
+                ballColor[i] = "yellow";
+                ballColor[j] = "yellow";
+            }
+        }
+    }
 }
 
 function getRandomInt(min, max)
