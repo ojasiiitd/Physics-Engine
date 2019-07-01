@@ -28,7 +28,7 @@ var colors = [
 var ballColor = [] , xPos = [] , yPos = [] ,
     xVel = [] , yVel = [] , u = [] ,
     runtime = [] , g = 9.81 , restitution = 0.99 ,
-    run , runInterval = 100 , radius = 10 , initialX;
+    run , runInterval = 15 , radius = 10 , initialX;
 
 function pointerBall()
 {
