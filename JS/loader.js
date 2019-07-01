@@ -10,9 +10,9 @@ canvas.width = width-18;
 canvas.height = 800;
 var ctx = canvas.getContext("2d");
 
-const addBall = document.querySelectorAll(".button")[0];
-const grav = document.querySelectorAll(".button")[1];
-const stop = document.querySelectorAll(".button")[2];
+const addBall = document.querySelector("#moreBalls");
+const grav = document.querySelector("#gravity");
+const stop = document.querySelector("#stopAll");
 
 addBall.addEventListener("click" , newBall);
 grav.addEventListener("click" , start);
@@ -28,7 +28,7 @@ var colors = [
 var ballColor = [] , xPos = [] , yPos = [] ,
     xVel = [] , yVel = [] , u = [] ,
     runtime = [] , g = 9.81 , restitution = 0.99 ,
-    run , runInterval = 7 , radius = 10 , initialX;
+    run , runInterval = 1 , radius = 10 , initialX;
 
 function pointerBall()
 {
@@ -116,10 +116,10 @@ function draw()
         else
             yVel[it] = u[it] + (g*(runtime[it]/1000));
         
-        if(xPos[it]+12+radius >= canvas.width || xPos[it]-12-radius <= 0)
+        if(xPos[it]+16+radius >= canvas.width || xPos[it]-16-radius <= 0)
             xVel[it] *= (-1);
 
-        if(yPos[it]+12+radius >= canvas.height)
+        if(yPos[it]+16+radius >= canvas.height)
         {
             runtime[it] = 0;
             yVel[it] *= (-1);
