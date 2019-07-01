@@ -11,26 +11,33 @@ canvas.height = 800;
 
 var ctx = canvas.getContext("2d");
 
+var colors = [
+    "tomato" , "blueviolet" , 
+    "lime" , "snow" , 
+    "brown" , "black" ,
+    "orange" ,  "tan"
+    ];
+
 box();
 
 function box()
 {
     ctx.lineWidth = 10;
-    ctx.strokeStyle = "slateblue";
+    ctx.strokeStyle = "red";
     ctx.strokeRect(0 , 0 , canvas.width , canvas.height);
 }
 
 var xPos = [] , yPos = [] ,
-    xVel = [] , yVel = [] , u = 0 ,
-    g = 9.81 , run , runtime = 0 , flag = false;
+    xVel = [] , yVel = [] , u = [] ,
+    g = 9.81 , run , runtime = [] , runInterval = 1;
 
 function ball(x , y)
 {
-    ctx.fillStyle = "tomato";
-    for(var center = 0 ; center<x.length ; center++)
+    ctx.fillStyle = "blueviolet";
+    for(var c = 0 ; c<x.length ; c++)
     {
         ctx.beginPath();
-        ctx.arc(x[center] , y[center] , 14 , 0 , 2*Math.PI);
+        ctx.arc(x[c] , y[c] , 14 , 0 , 2*Math.PI);
         ctx.fill();
         ctx.closePath();
     }
@@ -46,28 +53,29 @@ function drawInit()
 
 function draw()
 {
-    runtime += 15;
-    for(var it = 0 ; it<xPos.length ; it++)
+    for(var it = 0 ; it<yPos.length ; it++)
+        runtime[it] += runInterval;
+    for(var it = 0 ; it<yPos.length ; it++)
     {
         yPos[it] += yVel[it];
 
-        if(u < 0 && (yVel[it] < 0.001 && yVel[it] > -0.001))
+        if(u[it] < 0 && (yVel[it] < 0.00000001 && yVel[it] > -0.00000001))
         {
-            u = 0;
+            runtime[it] = 0;
             yVel[it] = 0;
-            runtime = 0;
+            u[it] = yVel[it];
         }
 
-        if(yVel[it] >= 0 && u == 0)
-            yVel[it] = (g*(runtime/1000));
+        if(yVel[it] >= 0 && u[it] == 0)
+            yVel[it] = (g*(runtime[it]/1000));
         else
-            yVel[it] = u + (g*(runtime/1000));
+            yVel[it] = u[it] + (g*(runtime[it]/1000));
         
         if(yPos[it]+17 >= canvas.height)
         {
-            yVel[it] *= -.9;
-            u = yVel[it];
-            runtime = 0;
+            runtime[it] = 0;
+            yVel[it] *= -.99;
+            u[it] = yVel[it];
         }
     }
 
@@ -81,7 +89,7 @@ function getRandomInt(min, max)
 
 function getRandomFloat(min, max)
 {
-    return Math.random() * (max - min + 1) + min;
+    return Math.random() * (max - min + 1) + min;15
 }
 
 const addBall = document.querySelectorAll(".button")[0];
@@ -99,6 +107,8 @@ function pointerBall()
     yPos.push(event.clientY);
     xVel.push(0);
     yVel.push(0);
+    u.push(0);
+    runtime.push(0);
 
     drawInit();
 }
@@ -109,6 +119,8 @@ function newBall()
     yPos.push(getRandomInt(13 , canvas.height-13));
     xVel.push(0);
     yVel.push(0);
+    u.push(0);
+    runtime.push(0);
 
     drawInit();
 }
@@ -116,7 +128,7 @@ function newBall()
 function start()
 {
     clearInterval(run);
-    run = setInterval(draw , 15);
+    run = setInterval(draw , runInterval);
 }
 
 function pause()
