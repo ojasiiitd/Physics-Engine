@@ -21,8 +21,8 @@ function box()
 }
 
 var xPos = [] , yPos = [] ,
-    xVel = [] , yVel = [],
-    run;
+    xVel = [] , yVel = [] , u = 0 ,
+    g = 9.81 , run , runtime = 0 , flag = false;
 
 function ball(x , y)
 {
@@ -46,26 +46,28 @@ function drawInit()
 
 function draw()
 {
+    runtime += 15;
     for(var it = 0 ; it<xPos.length ; it++)
     {
-        xPos[it] += xVel[it];
         yPos[it] += yVel[it];
 
-        if(xPos[it]+8 >= canvas.width || xPos[it]-8 <= 0)
+        if(u < 0 && (yVel[it] < 0.001 && yVel[it] > -0.001))
         {
-            xVel[it] *= -1;
-            if(yVel[it] > 0)
-                yVel[it] -= .4;
-            else
-                yVel[it] += .4;
+            u = 0;
+            yVel[it] = 0;
+            runtime = 0;
         }
-        if(yPos[it]+8 >= canvas.height || yPos[it]-8 <= 0)
+
+        if(yVel[it] >= 0 && u == 0)
+            yVel[it] = (g*(runtime/1000));
+        else
+            yVel[it] = u + (g*(runtime/1000));
+        
+        if(yPos[it]+17 >= canvas.height)
         {
-            yVel[it] *= -1;
-            if(xVel[it] > 0)
-                xVel[it] -= .4;
-            else
-                xVel[it] += .4;
+            yVel[it] *= -.9;
+            u = yVel[it];
+            runtime = 0;
         }
     }
 
@@ -95,8 +97,8 @@ function pointerBall()
 {
     xPos.push(event.clientX);
     yPos.push(event.clientY);
-    xVel.push(getRandomFloat(0.1 , 7));
-    yVel.push(getRandomFloat(0.1 , 7));
+    xVel.push(0);
+    yVel.push(0);
 
     drawInit();
 }
@@ -105,8 +107,8 @@ function newBall()
 {
     xPos.push(getRandomInt(13 , canvas.width-13));
     yPos.push(getRandomInt(13 , canvas.height-13));
-    xVel.push(getRandomFloat(0.1 , 7));
-    yVel.push(getRandomFloat(0.1 , 7));
+    xVel.push(0);
+    yVel.push(0);
 
     drawInit();
 }
@@ -114,7 +116,7 @@ function newBall()
 function start()
 {
     clearInterval(run);
-    run = setInterval(draw , 10);
+    run = setInterval(draw , 15);
 }
 
 function pause()
