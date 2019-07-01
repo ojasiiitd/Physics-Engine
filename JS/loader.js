@@ -89,6 +89,18 @@ addBall.addEventListener("click" , newBall);
 grav.addEventListener("click" , start);
 stop.addEventListener("click" , pause);
 
+canvas.addEventListener("click" , pointerBall);
+
+function pointerBall()
+{
+    xPos.push(event.clientX);
+    yPos.push(event.clientY);
+    xVel.push(getRandomFloat(0.1 , 7));
+    yVel.push(getRandomFloat(0.1 , 7));
+
+    drawInit();
+}
+
 function newBall()
 {
     xPos.push(getRandomInt(13 , canvas.width-13));
